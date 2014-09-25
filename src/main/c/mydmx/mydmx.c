@@ -1,6 +1,7 @@
 #include <jni.h>
-
 #include "com_seesideproductions_blinken_controllers_MyDMXController.h"
+
+#include <windows.h>
 #include "_DasHard.h"
 
 #define UNIVERSE_SIZE 512
