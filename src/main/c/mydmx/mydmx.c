@@ -9,7 +9,14 @@
 
 JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_open(JNIEnv *env, jobject this)
 {
-    DasUsbCommand(DHC_OPEN, 0, NULL);
+    if (DasUsbCommand(DHC_OPEN, 0, NULL) < 0)
+    {
+        (*env)->ThrowNew(env,
+            (*env)->FindClass(env, "com/seesideproductions/blinken/controllers/DMXException"),
+            "Could not open interface.");
+        return;
+    }
+
     DasUsbCommand(DHC_DMXOUTOFF, 0, NULL);
 }
 

@@ -29,8 +29,10 @@ public class MyDMXController implements Controller
 
     /**
      * Open a connection to the controller.
+     *
+     * @throws DMXException upon failure to connect to the controller
      */
-    public native void open();
+    public native void open() throws DMXException;
 
     /**
      * Close a connection to the controller.
