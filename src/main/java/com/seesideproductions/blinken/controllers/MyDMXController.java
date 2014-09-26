@@ -10,7 +10,7 @@ package com.seesideproductions.blinken.controllers;
  * @author scoleman
  * @since 0.0.1
  */
-public class MyDMXController implements Controller
+public class MyDMXController extends Controller
 {
     static
     {

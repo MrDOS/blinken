@@ -1,6 +1,7 @@
 package com.seesideproductions.blinken.controllers;
 
 import java.io.Closeable;
+import java.util.Map;
 
 /**
  * A DMX controller.
@@ -8,7 +9,7 @@ import java.io.Closeable;
  * @author scoleman
  * @since 0.0.1
  */
-public interface Controller extends Closeable
+public abstract class Controller implements Closeable
 {
     /**
      * Set the values on all DMX channels in a universe. {@code values} is
@@ -23,8 +24,25 @@ public interface Controller extends Closeable
      * @param universe the 0-based DMX universe to control
      * @param values the values to set for all channels in the universe
      * @throws DMXException in the event of failure to set the values, if the
-     *                      controller fails to set the values, if the values
-     *                      are inappropriate, etc.
+     *         controller fails to set the values, if the values
+     *         are inappropriate, etc.
      */
-    public void set(int universe, byte[] values) throws DMXException;
+    public abstract void set(int universe, byte[] values) throws DMXException;
+
+    /**
+     * The same as (@link {@link #set(int, byte[])}), but takes multiple
+     * universes of values simultaneously.
+     * 
+     * @param values the universes to set
+     * @throws DMXException in the event of failure to set the values, if the
+     *         controller fails to set the values, if the values
+     *         are inappropriate, etc.
+     */
+    public void set(Map<Integer, byte[]> values) throws DMXException
+    {
+        for (Map.Entry<Integer, byte[]> universe : values.entrySet())
+        {
+            this.set(universe.getKey(), universe.getValue());
+        }
+    }
 }
