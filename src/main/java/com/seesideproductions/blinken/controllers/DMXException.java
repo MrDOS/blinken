@@ -8,9 +8,9 @@ package com.seesideproductions.blinken.controllers;
  */
 public class DMXException extends Exception
 {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public DMXException(String message)
+    public DMXException(String message)
     {
         super(message);
     }
