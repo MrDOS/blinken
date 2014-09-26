@@ -14,17 +14,7 @@ public class MyDMXController implements Controller
 {
     static
     {
-        switch (System.getProperty("os.arch"))
-        {
-            case "i386":
-            case "x86":
-                System.loadLibrary("mydmx32");
-                break;
-            case "amd64":
-            case "x86_64":
-                System.loadLibrary("mydmx64");
-                break;
-        }
+        System.loadLibrary("mydmx32");
     }
 
     /**

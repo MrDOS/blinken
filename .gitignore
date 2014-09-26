@@ -1,2 +1,6 @@
 *.sublime-workspace
+.classpath
+.project
+.settings/
+
 target/

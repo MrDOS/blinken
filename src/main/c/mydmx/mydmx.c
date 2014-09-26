@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #include <jni.h>
 #include "com_seesideproductions_blinken_controllers_MyDMXController.h"
 
@@ -5,49 +7,51 @@
 #include "_DasHard.h"
 
 #define UNIVERSE_SIZE 512
-#define MAX(a, b) ((a > b) ? a : b)
+#define MIN(a, b) ((a < b) ? a : b)
 
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_open(JNIEnv *env, jobject this)
+HINSTANCE DAS_LIB = NULL;
+int lib_refs = 0;
+
+typedef int (*DASHARDCOMMAND)(int, int, void *);
+DASHARDCOMMAND DasUsbCommand = NULL;
+
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_open(JNIEnv *env, jobject this)
 {
-    if (DasUsbCommand(DHC_OPEN, 0, NULL) < 0)
+    if (DAS_LIB == NULL)
     {
-        (*env)->ThrowNew(env,
-            (*env)->FindClass(env, "com/seesideproductions/blinken/controllers/DMXException"),
-            "Could not open interface.");
-        return;
+        DAS_LIB = LoadLibrary("DasHard2006.dll");
+        DasUsbCommand = (DASHARDCOMMAND) GetProcAddress(DAS_LIB, "DasUsbCommand");
+
+        DasUsbCommand(DHC_INIT, 0, NULL);
     }
 
-    DasUsbCommand(DHC_DMXOUTOFF, 0, NULL);
+    lib_refs++;
 }
 
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_close(JNIEnv *env, jobject this)
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_close(JNIEnv *env, jobject this)
 {
-    DasUsbCommand(DHC_CLOSE, 0, NULL);
+    if (--lib_refs == 0)
+    {
+        DasUsbCommand(DHC_EXIT, 0, NULL);
+
+        FreeLibrary(DAS_LIB);
+        DAS_LIB = NULL;
+        DasUsbCommand = NULL;
+    }
 }
 
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_set(JNIEnv *env, jobject this, jbyteArray jValues)
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_set(JNIEnv *env, jobject this, jbyteArray jValues)
 {
     /* If, for some reason, we've been sent an array of values smaller than the
      * maximum size of a the DMX512 universe, we want to make sure we know ahead
      * of time so we don't accidentally try to send a bunch of garbage data out
      * to the controller (or worse, segfault). */
-    jsize valuec = MAX((*env)->GetArrayLength(env, jValues), UNIVERSE_SIZE);
+    jsize valuec = MIN((*env)->GetArrayLength(env, jValues), UNIVERSE_SIZE);
     jbyte *values = (*env)->GetByteArrayElements(env, jValues, NULL);
 
-    if (DasUsbCommand(DHC_DMXOUT, valuec, values) == DHE_NOTHINGTODO)
-    {
-        /* The library will notice if a set request doesn't actually change
-         * anything and avoid making a round-trip to the controller.
-         * Unfortunately, if no USB traffic is observed for 6 seconds, the
-         * controller goes into some sort of sleep mode. So if we haven't
-         * changed anything, we still need to cause some USB traffic to avoid
-         * "losing" the controller.
-         *
-         * TODO: Does DHC_RESET or DHC_VERSION still cause USB traffic, and does
-         * it take less time than a close/open? */
-        DasUsbCommand(DHC_CLOSE, 0, NULL);
-        DasUsbCommand(DHC_OPEN, 0, NULL);
-    }
+    DasUsbCommand(DHC_OPEN, 0, NULL);
+    DasUsbCommand(DHC_DMXOUT, valuec, values);
+    DasUsbCommand(DHC_CLOSE, 0, NULL);
 
     (*env)->ReleaseByteArrayElements(env, jValues, values, JNI_ABORT);
 }

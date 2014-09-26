@@ -12,7 +12,7 @@ extern "C" {
  * Method:    open
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_open
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_open
   (JNIEnv *, jobject);
 
 /*
@@ -20,7 +20,7 @@ JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXCont
  * Method:    close
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_close
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_close
   (JNIEnv *, jobject);
 
 /*
@@ -28,7 +28,7 @@ JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXCont
  * Method:    set
  * Signature: ([B)V
  */
-JNIEXPORT void JNICALL Java_com_seesideproductions_blinken_controllers_MyDMXController_set
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_set
   (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
