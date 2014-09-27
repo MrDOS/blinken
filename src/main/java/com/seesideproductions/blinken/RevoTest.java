@@ -5,7 +5,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import com.seesideproductions.blinken.controllers.MyDMXController;
+import com.seesideproductions.blinken.controllers.DasController;
 
 public class RevoTest
 {
@@ -46,7 +46,7 @@ public class RevoTest
             frames[i++] = frame;
         }
 
-        MyDMXController controller = new MyDMXController();
+        DasController controller = new DasController();
         controller.open();
 
         i = 0;

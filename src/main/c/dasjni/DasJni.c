@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 #include <jni.h>
-#include "com_seesideproductions_blinken_controllers_MyDMXController.h"
+#include "com_seesideproductions_blinken_controllers_DasController.h"
 
 #include <windows.h>
 #include "_DasHard.h"
@@ -15,7 +15,7 @@ int lib_refs = 0;
 typedef int (*DASHARDCOMMAND)(int, int, void *);
 DASHARDCOMMAND DasUsbCommand = NULL;
 
-JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_open(JNIEnv *env, jobject this)
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_DasController_open(JNIEnv *env, jobject this)
 {
     if (DAS_LIB == NULL)
     {
@@ -28,7 +28,7 @@ JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXCon
     lib_refs++;
 }
 
-JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_close(JNIEnv *env, jobject this)
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_DasController_close(JNIEnv *env, jobject this)
 {
     if (--lib_refs == 0)
     {
@@ -40,7 +40,7 @@ JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXCon
     }
 }
 
-JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_MyDMXController_set(JNIEnv *env, jobject this, jbyteArray jValues)
+JNIEXPORT void JNICALL _Java_com_seesideproductions_blinken_controllers_DasController_set(JNIEnv *env, jobject this, jbyteArray jValues)
 {
     /* If, for some reason, we've been sent an array of values smaller than the
      * maximum size of a the DMX512 universe, we want to make sure we know ahead

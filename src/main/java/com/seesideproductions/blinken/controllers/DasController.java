@@ -1,7 +1,8 @@
 package com.seesideproductions.blinken.controllers;
 
 /**
- * Interface for the American DJ myDMX controller.
+ * Interface for DMX controllers accessible via the {@link DasHard2006.dll}
+ * library.
  *
  * While this class implements {@link Closeable}, it is still permissable to
  * reopen the interface (i.e., call {@link #open()}) after {@link #close()} has
@@ -10,11 +11,11 @@ package com.seesideproductions.blinken.controllers;
  * @author scoleman
  * @since 0.0.1
  */
-public class MyDMXController extends Controller
+public class DasController extends Controller
 {
     static
     {
-        System.loadLibrary("mydmx32");
+        System.loadLibrary("DasJni");
     }
 
     /**
